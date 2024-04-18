@@ -33,24 +33,24 @@ class AppleSupportDownloadInfoProvider(URLGetter):
         "ARTICLE_NUMBER": {
             "required": True,
             "description": (
-                "The KB article number without the leading 'DL' "
-                "e.g. https://support.apple.com/kb/dl907 "
-                "ARTICLE_NUMBER = 907"
+                "The article number from Apple’s Support Documentation site "
+                "(revised 2024). e.g., https://support.apple.com/en-us/106463 "
+                "ARTICLE_NUMBER = 106463"
             ),
         },
         "LOCALE": {
             "required": False,
             "description": (
                 "The ISO-639 language code and the "
-                "ISO-3166 country code "
-                "e.g. en_US = English, American "
-                "es_ES = Español, Spain"
+                "ISO-3166 country code in lower case. "
+                "e.g., en-us = English, American; "
+                "es-es = Español, Spain"
             ),
         },
     }
     output_variables = {
         "article_url": {
-            "description": "The url for the KB article related to the download."
+            "description": "The url for the article related to the download."
         },
         "url": {"description": "The full url for the file you want to download."},
         "version": {"description": "The version of the support download"},
@@ -105,11 +105,11 @@ class AppleSupportDownloadInfoProvider(URLGetter):
 
         # Capture input variables
         article_number = self.env["ARTICLE_NUMBER"]
-        locale = self.env.get("LOCALE", "en_US")
+        locale = self.env.get("LOCALE", "en-us")
 
         # Determine URL of article
-        article_url = "{base_url}/kb/DL{article_number}".format(
-            base_url=APPLE_SUPPORT_URL, article_number=article_number
+        article_url = "{base_url}/{locale}/{article_number}".format(
+            base_url=APPLE_SUPPORT_URL, locale=locale, article_number=article_number
         )
         self.env["article_url"] = article_url
         self.output("Article URL: {article_url}".format(article_url=article_url), 2)
